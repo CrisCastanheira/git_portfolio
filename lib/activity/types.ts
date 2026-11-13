@@ -19,6 +19,16 @@ export type ActivityMetrics = {
   longestStreak: number;
 };
 
+export type PortfolioSnapshot = {
+  generatedAt: string;
+  from: string;
+  to: string;
+  quality: ActivityQuality;
+  accounts: AccountActivity[];
+  days: ContributionDay[];
+  metrics: ActivityMetrics | null;
+};
+
 export type AggregatedActivity = {
   days: ContributionDay[];
   accounts: AccountActivity[];
