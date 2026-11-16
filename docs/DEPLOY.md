@@ -15,7 +15,7 @@ Valores não são incluídos neste repositório. Confirme antes do Preview que o
 
 ## Fluxo sugerido pelo titular
 
-1. Configure Node `>=20.19.0`, instale com `npm ci` e execute [as verificações locais](TESTING.md).
+1. Configure Node `24.x`, instale com `npm ci` e execute [as verificações locais](TESTING.md).
 2. Cadastre segredos em ambiente **Preview** do provedor e defina `SITE_URL` para a URL real de preview.
 3. Construa o Preview sem domínio de produção, inspecione todas as páginas e os retornos `/api/activity`, `/api/organization` e `/robots.txt`.
 4. Execute uma primeira sincronização autenticada ao endpoint `/api/cron/sync`, valide a qualidade e `generatedAt` do snapshot; não compartilhe a credencial na URL ou em logs.

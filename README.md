@@ -6,7 +6,7 @@ O projeto não inclui biografia, projetos, certificados ou métricas fictícias.
 
 ## Desenvolvimento local
 
-Requisitos: Node.js `>=20.19.0` e npm. No Windows PowerShell:
+Requisitos: Node.js `24.x` e npm. No Windows PowerShell:
 
 ```powershell
 npm ci
