@@ -97,18 +97,18 @@
 
 **Interfaces:** a visualização recebe `ContributionDay[]` sempre explicitamente; seletores atualizam gráfico, estatísticas e qualidade simultaneamente.
 
-- [ ] Escrever testes para filtros e conteúdo do estado `unavailable`, além de fornecer `data=[]` sem acionar demo.
-- [ ] Rodar testes; esperado: falha por ausência da visualização integrada.
-- [ ] Integrar fielmente o componente do Anexo A e bloquear geração de demo em produção.
-- [ ] Rodar os testes; verificar que Skyline mantém modo 2D/3D, filtros e alertas de completude.
-- [ ] Commit: `feat: integrate contribution skyline and portfolio home`.
+- [x] Escrever testes para filtros e conteúdo do estado `unavailable`, além de fornecer `data=[]` sem acionar demo.
+- [x] Rodar testes; esperado: falha por ausência da visualização integrada.
+- [x] Integrar fielmente o componente do Anexo A e bloquear geração de demo em produção.
+- [x] Rodar os testes; verificar que Skyline mantém modo 2D/3D, filtros e alertas de completude.
+- [x] Commit: `feat: integrate contribution skyline and portfolio home`.
 
 ### Task 6: Operação, documentação, E2E e entrega
 
 **Arquivos:** `.env.example`, `README.md`, `AGENTS.md`, `.github/copilot-instructions.md`, `docs/{ARCHITECTURE,API,COMO-ADICIONAR-CONTEUDO,TESTING,DEPLOY,SECURITY}.md`, sitemap/robots/favicon, Playwright e testes E2E.
 
-- [ ] Escrever jornadas E2E para navegação, filtros/2D-3D, listagem/detalhe/galeria e estados vazios.
-- [ ] Rodar `npm run test:e2e`; registrar limitações se os browsers do Playwright não estiverem disponíveis.
-- [ ] Executar `npm run test:run`, `npm run lint` e `npm run build`; corrigir erros observados.
-- [ ] Conferir bundle, env público, conteúdo, metadados e instruções de Preview sem publicar em Produção.
-- [ ] Commit: `docs: document operation and quality checks`.
+- [x] Escrever jornadas E2E para navegação, filtros/2D-3D, listagem/detalhe/galeria e estados vazios.
+- [x] Rodar `npm run test:e2e`: 2 passaram com Chromium.
+- [x] Executar `npm run test:run` (30 testes), `npm run lint`, `npm run typecheck` e `npm run build`; corrigir erros observados.
+- [x] Conferir conteúdo, metadados, env de exemplo e instruções de Preview sem publicar em Produção.
+- [x] Commit: `docs: document operation and quality checks`.
