@@ -1,6 +1,6 @@
 import "server-only";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { access, readFile, stat } from "node:fs/promises";
+import { join, resolve, sep } from "node:path";
 import { z } from "zod";
 import {
   AcademicWorkSchema,
@@ -23,6 +23,21 @@ async function readJson<T>(filename: string, schema: z.ZodType<T>): Promise<T> {
   const path = join(process.cwd(), "content", filename);
   const content = await readFile(path, "utf8");
   return schema.parse(JSON.parse(content));
+}
+
+async function ensureMediaFiles(paths: Array<string | undefined>): Promise<void> {
+  const publicRoot = resolve(process.cwd(), "public");
+  for (const path of paths.filter((value): value is string => Boolean(value))) {
+    const absolutePath = resolve(publicRoot, path.slice(1));
+    if (!absolutePath.startsWith(`${publicRoot}${sep}`)) throw new Error(`Caminho de mídia fora de public/: ${path}`);
+    try {
+      await access(absolutePath);
+      if (!(await stat(absolutePath)).isFile()) throw new Error(`O caminho de mídia não é um arquivo: ${path}`);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("não é um arquivo")) throw error;
+      throw new Error(`Arquivo de mídia não encontrado em public${path}.`);
+    }
+  }
 }
 
 export function parseProjectCollection(value: unknown): Project[] {
@@ -50,19 +65,27 @@ export function parseAcademicWorkCollection(value: unknown): AcademicWork[] {
 }
 
 export async function loadProjects(): Promise<Project[]> {
-  return parseProjectCollection(await readJson("projects.json", z.array(ProjectSchema)));
+  const projects = parseProjectCollection(await readJson("projects.json", z.array(ProjectSchema)));
+  await ensureMediaFiles(projects.flatMap((project) => project.gallery.map((image) => image.src)));
+  return projects;
 }
 
 export async function loadCertificates(): Promise<Certificate[]> {
-  return parseCertificateCollection(await readJson("certificates.json", z.array(CertificateSchema)));
+  const certificates = parseCertificateCollection(await readJson("certificates.json", z.array(CertificateSchema)));
+  await ensureMediaFiles(certificates.map((certificate) => certificate.image));
+  return certificates;
 }
 
 export async function loadAcademicWorks(): Promise<AcademicWork[]> {
-  return parseAcademicWorkCollection(await readJson("works.json", z.array(AcademicWorkSchema)));
+  const works = parseAcademicWorkCollection(await readJson("works.json", z.array(AcademicWorkSchema)));
+  await ensureMediaFiles(works.flatMap((work) => work.gallery.map((image) => image.src)));
+  return works;
 }
 
 export async function loadProfile(): Promise<Profile> {
-  return readJson("profile.json", ProfileSchema);
+  const profile = await readJson("profile.json", ProfileSchema);
+  await ensureMediaFiles([profile.avatar]);
+  return profile;
 }
 
 export async function loadSkills(): Promise<Skill[]> {

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { enumerateDateRange } from "@/lib/activity/dates";
 import { aggregateContributions } from "@/lib/activity/aggregate";
 import { calculateMetrics } from "@/lib/activity/metrics";
+import { markSnapshotStaleIfOutdated } from "@/lib/activity/freshness";
 
 describe("activity domain", () => {
   it("enumerates inclusive UTC dates across leap day", () => {
@@ -49,5 +50,20 @@ describe("activity domain", () => {
       currentStreak: 2,
       longestStreak: 3,
     });
+  });
+
+  it("marks outdated snapshots stale without changing their stored contribution days", () => {
+    const snapshot = {
+      generatedAt: "2026-11-11T00:00:00.000Z",
+      from: "2025-11-12",
+      to: "2026-11-11",
+      quality: "complete" as const,
+      accounts: [{ login: "CrisCastanheira", status: "available" as const, days: [{ date: "2026-11-10", count: 3 }] }],
+      days: [{ date: "2026-11-10", count: 3 }],
+      metrics: { total: 3, activeDays: 1, currentStreak: 0, longestStreak: 1 },
+    };
+    const result = markSnapshotStaleIfOutdated(snapshot, new Date("2026-11-13T00:00:00.000Z"));
+    expect(result.quality).toBe("stale");
+    expect(result.days).toEqual(snapshot.days);
   });
 });

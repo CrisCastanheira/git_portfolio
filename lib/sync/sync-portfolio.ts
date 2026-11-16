@@ -50,7 +50,11 @@ export async function syncPortfolio(input: {
   const aggregated = aggregateContributions(results);
   if (aggregated.quality === "unavailable") {
     const previous = await input.store.getLatest();
-    if (previous) return { ...previous, quality: "stale" };
+    if (previous) {
+      const stale = { ...previous, quality: "stale" as const };
+      await input.store.putLatest(stale);
+      return stale;
+    }
     return {
       generatedAt: now.toISOString(),
       from,

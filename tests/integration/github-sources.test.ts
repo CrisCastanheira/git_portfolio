@@ -70,4 +70,24 @@ describe("GitHub sources", () => {
     expect(url).toContain("/orgs/Dazum-Digital/repos?type=public");
     expect(new Headers(init.headers).has("authorization")).toBe(false);
   });
+
+  it("paginates public organization repositories without skipping pages", async () => {
+    const repository = (id: number) => ({
+      id,
+      name: `repo-${id}`,
+      full_name: `Dazum-Digital/repo-${id}`,
+      html_url: `https://github.com/Dazum-Digital/repo-${id}`,
+      updated_at: "2026-11-12T12:00:00Z",
+    });
+    const fetcher = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify(Array.from({ length: 100 }, (_, i) => repository(i + 1))), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify([repository(101)]), { status: 200 }));
+
+    const repos = await fetchOrganizationRepositories("Dazum-Digital", fetcher);
+
+    expect(repos).toHaveLength(101);
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    expect(String(fetcher.mock.calls[0]?.[0])).toContain("page=1");
+    expect(String(fetcher.mock.calls[1]?.[0])).toContain("page=2");
+  });
 });

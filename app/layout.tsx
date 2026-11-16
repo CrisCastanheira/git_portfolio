@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body>
         <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
         <SiteHeader />

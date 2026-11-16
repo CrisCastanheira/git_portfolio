@@ -3,7 +3,7 @@ import { z } from "zod";
 const SlugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug deve usar letras minúsculas, números e hífens.");
 const ExternalUrlSchema = z.string().url().refine((value) => new URL(value).protocol === "https:", "Use um link HTTPS.");
 const MediaPathSchema = z.string().refine((value) =>
-  value.startsWith("/media/") && !value.startsWith("//") && !value.split("/").includes(".."),
+  /^\/media\/[A-Za-z0-9._/-]+$/.test(value) && !value.startsWith("//") && !value.split("/").includes(".."),
 "A mídia deve estar em um caminho local dentro de /media/.");
 
 export const GalleryItemSchema = z.object({

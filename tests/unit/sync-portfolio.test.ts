@@ -46,7 +46,7 @@ describe("portfolio synchronization", () => {
       fetcher: async ({ login }) => ({ login, status: "unavailable", days: [], message: "Offline" }),
     });
     expect(result).toEqual({ ...oldSnapshot, quality: "stale" });
-    expect(store.putLatest).not.toHaveBeenCalled();
+    expect(store.putLatest).toHaveBeenCalledWith({ ...oldSnapshot, quality: "stale" });
   });
 
   it("retries an unavailable account once, then stores the recovered result", async () => {

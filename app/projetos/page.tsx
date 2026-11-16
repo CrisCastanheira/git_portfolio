@@ -6,7 +6,7 @@ import { loadProjects } from "@/lib/content/loaders";
 export const metadata: Metadata = { title: "Projetos" };
 
 export default async function ProjectsPage() {
-  const projects = await loadProjects();
+  const projects = (await loadProjects()).filter((project) => project.owner === "personal");
   return (
     <div className="section-page page-container">
       <p className="eyebrow">Portfólio / Projetos</p>
@@ -20,7 +20,7 @@ export default async function ProjectsPage() {
             title: project.title,
             summary: project.summary,
             href: `/projetos/${project.slug}`,
-            group: project.owner === "organization" ? "Organização" : "Pessoal",
+            group: "Pessoal",
             date: project.createdAt,
             tags: project.tags,
           }))}
